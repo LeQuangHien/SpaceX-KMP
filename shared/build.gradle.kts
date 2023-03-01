@@ -35,6 +35,10 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
+                with(Deps.Koin) {
+                    api(core)
+                    api(test)
+                }
             }
         }
         val commonTest by getting {
