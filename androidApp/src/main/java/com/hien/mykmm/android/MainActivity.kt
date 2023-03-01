@@ -10,12 +10,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hien.mykmm.android.ui.GreetPresenter
-import org.koin.android.ext.android.inject
+import com.hien.mykmm.android.ui.RocketScreen
 
 class MainActivity : ComponentActivity() {
-
-    private val presenter: GreetPresenter by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +22,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    GreetingView(presenter.print())
+                    RocketScreen()
                 }
             }
         }

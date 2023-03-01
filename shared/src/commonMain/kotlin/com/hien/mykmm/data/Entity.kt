@@ -1,4 +1,4 @@
-package com.hien.mykmm.entity
+package com.hien.mykmm.data
 
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant

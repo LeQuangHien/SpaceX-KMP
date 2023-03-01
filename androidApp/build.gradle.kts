@@ -46,9 +46,11 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.3.1")
     implementation("androidx.compose.material:material:1.3.1")
     implementation("androidx.activity:activity-compose:1.6.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-beta01")
 
     with(Deps.Koin) {
         implementation(core)
         implementation(android)
+        implementation(compose)
     }
 }

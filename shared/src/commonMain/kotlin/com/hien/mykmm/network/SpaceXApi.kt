@@ -1,6 +1,6 @@
 package com.hien.mykmm.network
 
-import com.hien.mykmm.entity.RocketLaunch
+import com.hien.mykmm.data.RocketLaunch
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
