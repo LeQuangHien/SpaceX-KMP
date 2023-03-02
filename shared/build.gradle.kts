@@ -26,6 +26,8 @@ kotlin {
     val coroutinesVersion = "1.6.4"
     val ktorVersion = "2.2.1"
     val dateTimeVersion = "0.4.0"
+    val mockkVersion = "1.13.4"
+    val mockkCommonVersion = "1.8.13.kotlin13"
 
     sourceSets {
         val commonMain by getting {
@@ -44,6 +46,8 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation("io.mockk:mockk-common:${mockkCommonVersion}")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
             }
         }
         val androidMain by getting {
@@ -51,7 +55,11 @@ kotlin {
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
             }
         }
-        val androidUnitTest by getting
+        val androidUnitTest by getting {
+            dependencies {
+                implementation("io.mockk:mockk-jvm:$mockkVersion")
+            }
+        }
         val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting
