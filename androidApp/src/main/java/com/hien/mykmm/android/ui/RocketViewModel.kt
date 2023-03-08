@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 data class RocketUiState(
     val rocketItems: List<RocketItemUiState> = listOf(),
+    val externalLink: String? = null
 )
 
 data class RocketItemUiState(
@@ -18,6 +19,7 @@ data class RocketItemUiState(
     val launchYear: String,
     val flightNumber: String,
     val details: String?,
+    val article: String?
 )
 
 class RocketViewModel(
@@ -34,12 +36,25 @@ class RocketViewModel(
                     mission = it.missionName,
                     launchYear = it.launchYear.toString(),
                     flightNumber = it.flightNumber.toString(),
-                    details = it.details
+                    details = it.details,
+                    article = it.links.article
                 )
             }
             _uiState.update {
                 it.copy(rocketItems = items)
             }
+        }
+    }
+
+    fun onItemClicked(article: String?) {
+        _uiState.update {
+            it.copy(externalLink = article)
+        }
+    }
+
+    fun resetExternalLink() {
+        _uiState.update {
+            it.copy(externalLink = null)
         }
     }
 }
