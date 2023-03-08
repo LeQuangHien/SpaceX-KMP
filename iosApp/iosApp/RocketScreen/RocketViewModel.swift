@@ -12,11 +12,13 @@ struct RocketUiState {
     var rocketItems: [RocketItemUiState] = []
 }
 
-struct RocketItemUiState {
+struct RocketItemUiState: Identifiable {
+    let id: String
     let mission: String
     let launchYear: String
     let flightNumber: String
     let details: String?
+    let url: String?
 }
 
 class RocketViewModel: ObservableObject {
@@ -26,7 +28,7 @@ class RocketViewModel: ObservableObject {
         do {
             let items = try await SpaceXRepositoryHelper().getAllLaunches()
             let rocketItems: [RocketItemUiState] = items.map { item in
-                return RocketItemUiState(mission: item.missionName, launchYear: String(item.launchYear), flightNumber: String(item.flightNumber), details: item.details)
+                return RocketItemUiState(id: String(item.flightNumber), mission: item.missionName, launchYear: String(item.launchYear), flightNumber: String(item.flightNumber), details: item.details, url: item.links.article)
             }
             DispatchQueue.main.async {
                 self.uiState.rocketItems = rocketItems
