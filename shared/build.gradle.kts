@@ -2,7 +2,19 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     kotlin("plugin.serialization") version "1.8.10"
+    id("com.google.devtools.ksp") version "1.8.0-1.0.8"
 }
+
+repositories {
+    mavenCentral()
+}
+
+val coroutinesVersion = "1.6.4"
+val ktorVersion = "2.2.1"
+val dateTimeVersion = "0.4.0"
+val mockkVersion = "1.13.4"
+val mockativeVersion = "1.3.1"
+val mockkCommonVersion = "1.8.13.kotlin13"
 
 kotlin {
     android {
@@ -23,12 +35,6 @@ kotlin {
         }
     }
 
-    val coroutinesVersion = "1.6.4"
-    val ktorVersion = "2.2.1"
-    val dateTimeVersion = "0.4.0"
-    val mockkVersion = "1.13.4"
-    val mockkCommonVersion = "1.8.13.kotlin13"
-
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -48,6 +54,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation("io.mockk:mockk-common:${mockkCommonVersion}")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
+                implementation("io.mockative:mockative:${mockativeVersion}")
             }
         }
         val androidMain by getting {
@@ -91,4 +98,12 @@ android {
         minSdk = 24
         targetSdk = 33
     }
+}
+
+dependencies {
+    configurations
+        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
+        .forEach {
+            add(it.name, "io.mockative:mockative-processor:${mockativeVersion}")
+        }
 }

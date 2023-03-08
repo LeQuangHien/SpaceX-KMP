@@ -8,7 +8,10 @@ import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
-class SpaceXApi {
+interface SpaceXApi {
+    suspend fun getAllLaunches(): List<RocketLaunch>
+}
+class DefaultSpaceXApi: SpaceXApi {
     private val httpClient = HttpClient {
         install(ContentNegotiation) {
             json(
@@ -20,7 +23,7 @@ class SpaceXApi {
         }
     }
 
-    suspend fun getAllLaunches(): List<RocketLaunch> {
+    override suspend fun getAllLaunches(): List<RocketLaunch> {
         return httpClient.get("https://api.spacexdata.com/v5/launches").body()
     }
 }
