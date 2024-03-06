@@ -1,0 +1,1 @@
+Kotlin Multiplatform Mobile for Android and iOS, which shares logic business. UIs remain native: Jetpack Compose for Android and SwiftUI for iOS. Each platform also has their own ViewModel. Tech stack: Ktor, Kotlin Coroutines, Koin, MockK and Mockative
