@@ -1,16 +1,15 @@
 import SwiftUI
-import shared
+import Shared
 
 @main
 struct iOSApp: App {
-    
     init() {
-        HelperKt.doInitKoin()
+        KoinKt.doInitKoin()
     }
-    
-	var body: some Scene {
-		WindowGroup {
-			RocketScreen()
-		}
-	}
+
+    var body: some Scene {
+        WindowGroup {
+            RocketScreen()
+        }
+    }
 }

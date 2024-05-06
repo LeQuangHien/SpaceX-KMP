@@ -5,5 +5,5 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class KoinDependencies : KoinComponent {
-    private val spaceXRepository: SpaceXRepository by inject()
+    val spaceXRepository: SpaceXRepository by inject()
 }
