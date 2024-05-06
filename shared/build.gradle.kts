@@ -1,26 +1,15 @@
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
-    kotlin("plugin.serialization") version "1.8.10"
-    id("com.google.devtools.ksp") version "1.8.0-1.0.8"
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.skie)
 }
-
-repositories {
-    mavenCentral()
-}
-
-val coroutinesVersion = "1.6.4"
-val ktorVersion = "2.2.1"
-val dateTimeVersion = "0.4.0"
-val mockkVersion = "1.13.4"
-val mockativeVersion = "1.3.1"
-val mockkCommonVersion = "1.8.13.kotlin13"
 
 kotlin {
-    android {
+    androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = "11"
             }
         }
     }
@@ -28,82 +17,45 @@ kotlin {
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach {
-        it.binaries.framework {
-            baseName = "shared"
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "Shared"
+            isStatic = true
         }
     }
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
-                with(Deps.Koin) {
-                    api(core)
-                    api(test)
-                }
-            }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation("io.mockk:mockk-common:${mockkCommonVersion}")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
-                implementation("io.mockative:mockative:${mockativeVersion}")
-            }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
-        val androidMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-android:$ktorVersion")
-            }
+        commonMain.dependencies {
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.koin.core)
+            implementation(libs.skie.annotations)
+            api(libs.kmm.viewmodel)
         }
-        val androidUnitTest by getting {
-            dependencies {
-                implementation("io.mockk:mockk-jvm:$mockkVersion")
-            }
-        }
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
-        val iosMain by creating {
-            dependsOn(commonMain)
-            iosX64Main.dependsOn(this)
-            iosArm64Main.dependsOn(this)
-            iosSimulatorArm64Main.dependsOn(this)
-            dependencies {
-                implementation("io.ktor:ktor-client-darwin:$ktorVersion")
-            }
-        }
-        val iosX64Test by getting
-        val iosArm64Test by getting
-        val iosSimulatorArm64Test by getting
-        val iosTest by creating {
-            dependsOn(commonTest)
-            iosX64Test.dependsOn(this)
-            iosArm64Test.dependsOn(this)
-            iosSimulatorArm64Test.dependsOn(this)
+
+        // Required by KMM-ViewModel
+        all {
+            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
         }
     }
 }
 
 android {
-    namespace = "com.hien.mykmm"
-    compileSdk = 33
-    defaultConfig {
-        minSdk = 24
-        targetSdk = 33
+    namespace = "com.hien.mykmm.shared"
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
-}
-
-dependencies {
-    configurations
-        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
-        .forEach {
-            add(it.name, "io.mockative:mockative-processor:${mockativeVersion}")
-        }
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+    }
 }

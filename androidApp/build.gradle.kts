@@ -1,25 +1,55 @@
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.jetbrainsCompose)
+}
+
+kotlin {
+    androidTarget {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "11"
+            }
+        }
+    }
+
+    sourceSets {
+        androidMain.dependencies {
+            implementation(project.dependencies.platform(libs.compose.bom))
+            implementation(libs.compose.ui)
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.viewmodel.compose)
+            implementation(libs.androidx.navigation.compose)
+            implementation(libs.koin.androidx.compose)
+            implementation(libs.coil.compose)
+        }
+        commonMain.dependencies {
+            implementation(projects.shared)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material)
+            implementation(compose.components.resources)
+        }
+    }
 }
 
 android {
-    namespace = "com.hien.mykmm.android"
-    compileSdk = 33
+    namespace = "com.hien.mykmm"
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
+    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+
     defaultConfig {
-        applicationId = "com.hien.mykmm.android"
-        minSdk = 24
-        targetSdk = 33
+        applicationId = "com.hien.mykmm"
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
     }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.0"
-    }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -30,28 +60,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-
-dependencies {
-    implementation(project(":shared"))
-    implementation("androidx.compose.ui:ui:1.3.3")
-    implementation("androidx.compose.ui:ui-tooling:1.3.3")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.3.3")
-    implementation("androidx.compose.foundation:foundation:1.3.1")
-    implementation("androidx.compose.material:material:1.3.1")
-    implementation("androidx.activity:activity-compose:1.6.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-beta01")
-    implementation("androidx.browser:browser:1.5.0")
-
-    with(Deps.Koin) {
-        implementation(core)
-        implementation(android)
-        implementation(compose)
+    dependencies {
+        debugImplementation(libs.compose.ui.tooling)
     }
 }

@@ -1,27 +1,8 @@
 plugins {
-    // trick: for the same plugin versions in all sub-modules
-    id("com.android.application").version("8.1.0-alpha04").apply(false)
-    id("com.android.library").version("8.1.0-alpha04").apply(false)
-    kotlin("android").version("1.8.0").apply(false)
-    kotlin("multiplatform").version("1.8.0").apply(false)
-}
-
-
-buildscript {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
+    alias(libs.plugins.jetbrainsCompose) apply false
+    alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.kotlinxSerialization) apply false
+    alias(libs.plugins.skie) apply false
     }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
-}
