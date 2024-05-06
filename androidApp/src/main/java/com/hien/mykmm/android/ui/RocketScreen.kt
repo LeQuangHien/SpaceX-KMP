@@ -1,69 +1,66 @@
 package com.hien.mykmm.android.ui
 
-import android.net.Uri
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hien.mykmm.android.MyApplicationTheme
-import org.koin.androidx.compose.getViewModel
+import com.hien.mykmm.data.Links
+import com.hien.mykmm.data.RocketLaunch
+import com.hien.mykmm.viewmodels.RocketViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-internal fun RocketScreen(
-    rocketViewModel: RocketViewModel = getViewModel()
-) {
-    val uiState by rocketViewModel.uiState.collectAsStateWithLifecycle()
-    Scaffold(
-        topBar = { TopAppBar(title = { Text("Rocket Launches") }) },
-    ) {
-        RocketLaunchList(
-            modifier = Modifier.padding(it),
-            rockets = uiState.rocketItems,
-            onItemClick = rocketViewModel::onItemClicked
-        )
+internal fun RocketScreen(navigateToDetails: (objectId: Int) -> Unit) {
+    val rocketViewModel: RocketViewModel = koinViewModel()
+    val objects by rocketViewModel.objects.collectAsState()
+
+    AnimatedContent(objects.isNotEmpty()) { objectsAvailable ->
+        if (objectsAvailable) {
+            RocketLaunchList(
+                rockets = objects,
+                onItemClick = navigateToDetails
+            )
+        } else {
+            EmptyScreenContent(Modifier.fillMaxSize())
+        }
     }
 
-    uiState.externalLink?.let {
-        rocketViewModel.resetExternalLink()
-        val context = LocalContext.current
-        val uri = Uri.parse(it)
-        ExternalBrowser.open(context, uri)
-    }
 }
 
 @Composable
 fun RocketLaunchList(
     modifier: Modifier = Modifier,
-    rockets: List<RocketItemUiState>,
-    onItemClick: (String?) -> Unit,
+    rockets: List<RocketLaunch>,
+    onItemClick: (objectId: Int) -> Unit,
 ) {
     LazyColumn(modifier = modifier.padding(8.dp)) {
-        items(rockets) { rocket ->
-            RocketCardView(rocket = rocket, onItemClick = onItemClick)
+        items(rockets, key = { it.flightNumber }) { rocket ->
+            RocketCardView(rocket = rocket, onItemClick = { onItemClick(rocket.flightNumber) })
         }
     }
 }
 
 @Composable
 fun RocketCardView(
-    rocket: RocketItemUiState,
-    onItemClick: (String?) -> Unit,
+    rocket: RocketLaunch,
+    onItemClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = Modifier
@@ -72,14 +69,12 @@ fun RocketCardView(
         elevation = 8.dp
     ) {
         Column(
-            modifier = Modifier
-                .clickable(enabled = rocket.article != null) {
-                    onItemClick(rocket.article)
-                }
-                .padding(16.dp)
+            modifier
+                .padding(8.dp)
+                .clickable { onItemClick() }
         ) {
             Text(
-                text = rocket.mission,
+                text = rocket.missionName,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -114,12 +109,16 @@ fun RocketCardView(
 fun RocketCardViewPreview() {
     MyApplicationTheme {
         RocketCardView(
-            RocketItemUiState(
-                mission = "FalconSat",
-                launchYear = "2006-03-24T22:30:00.000Z",
+            RocketLaunch(
+                missionName = "FalconSat",
+                launchDateUTC = "2006-03-24T22:30:00.000Z",
                 details = "Successful first stage burn and transition to second stage, maximum altitude 289 km, Premature engine shutdown at T+7 min 30 s, Failed to reach orbit, Failed to recover first stage",
-                flightNumber = "12",
-                article = "https://www.space.com/3590-spacex-falcon-1-rocket-fails-reach-orbit.html"
+                flightNumber = 1,
+                links = Links(
+                    patch = null,
+                    article = "https://www.space.com/3590-spacex-falcon-1-rocket-fails-reach-orbit.html"
+                ),
+                launchSuccess = null
             ),
             onItemClick = {}
         )
@@ -132,25 +131,39 @@ fun RocketListPreview() {
     MyApplicationTheme {
         RocketLaunchList(
             rockets = listOf(
-                RocketItemUiState(
-                    mission = "Falcon1",
-                    launchYear = "2006-03-24T22:30:00.000Z",
+                RocketLaunch(
+                    missionName = "FalconSat",
+                    launchDateUTC = "2006-03-24T22:30:00.000Z",
                     details = "Successful first stage burn and transition to second stage, maximum altitude 289 km, Premature engine shutdown at T+7 min 30 s, Failed to reach orbit, Failed to recover first stage",
-                    flightNumber = "1",
-                    article = "https://www.space.com/3590-spacex-falcon-1-rocket-fails-reach-orbit.html"
-                ), RocketItemUiState(
-                    mission = "Falcon2",
-                    launchYear = "2006-03-24T22:30:00.000Z",
+                    flightNumber = 1,
+                    links = Links(
+                        patch = null,
+                        article = "https://www.space.com/3590-spacex-falcon-1-rocket-fails-reach-orbit.html"
+                    ),
+                    launchSuccess = null
+                ),
+                RocketLaunch(
+                    missionName = "FalconSat",
+                    launchDateUTC = "2006-03-24T22:30:00.000Z",
                     details = "Successful first stage burn and transition to second stage, maximum altitude 289 km, Premature engine shutdown at T+7 min 30 s, Failed to reach orbit, Failed to recover first stage",
-                    flightNumber = "12",
-                    article = "https://www.space.com/3590-spacex-falcon-1-rocket-fails-reach-orbit.html"
-                ), RocketItemUiState(
-                    mission = "Falcon3",
-                    launchYear = "2006-03-24T22:30:00.000Z",
+                    flightNumber = 2,
+                    links = Links(
+                        patch = null,
+                        article = "https://www.space.com/3590-spacex-falcon-1-rocket-fails-reach-orbit.html"
+                    ),
+                    launchSuccess = null
+                ),
+                RocketLaunch(
+                    missionName = "FalconSat",
+                    launchDateUTC = "2006-03-24T22:30:00.000Z",
                     details = "Successful first stage burn and transition to second stage, maximum altitude 289 km, Premature engine shutdown at T+7 min 30 s, Failed to reach orbit, Failed to recover first stage",
-                    flightNumber = "13",
-                    article = "https://www.space.com/3590-spacex-falcon-1-rocket-fails-reach-orbit.html"
-                )
+                    flightNumber = 3,
+                    links = Links(
+                        patch = null,
+                        article = "https://www.space.com/3590-spacex-falcon-1-rocket-fails-reach-orbit.html"
+                    ),
+                    launchSuccess = null
+                ),
             ),
             onItemClick = {}
         )

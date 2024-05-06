@@ -3,13 +3,12 @@ package com.hien.mykmm.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.hien.mykmm.android.ui.DetailScreen
 import com.hien.mykmm.android.ui.RocketScreen
 
 class MainActivity : ComponentActivity() {
@@ -17,27 +16,25 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApplicationTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    RocketScreen()
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "list") {
+                composable("list") {
+                    RocketScreen(navigateToDetails = { objectId ->
+                        navController.navigate("details/$objectId")
+                    })
+                }
+                composable(
+                    "details/{objectId}",
+                    arguments = listOf(navArgument("objectId") { type = NavType.IntType })
+                ) { backstack ->
+                    DetailScreen(
+                        objectId = backstack.arguments?.getInt("objectId")!!,
+                        navigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun GreetingView(text: String) {
-    Text(text = text)
-}
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    MyApplicationTheme {
-        GreetingView("Hello, Android!")
     }
 }
