@@ -19,10 +19,6 @@ struct RocketScreen: View {
     @State
     var objects: [RocketLaunch] = []
 
-    let columns = [
-        GridItem(.adaptive(minimum: 120), alignment: .top)
-    ]
-
     var body: some View {
         ZStack {
             if !objects.isEmpty {
