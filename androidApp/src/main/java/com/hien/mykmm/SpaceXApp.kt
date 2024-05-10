@@ -1,4 +1,4 @@
-package com.hien.mykmm.android
+package com.hien.mykmm
 
 import android.app.Application
 import com.hien.mykmm.di.initKoin

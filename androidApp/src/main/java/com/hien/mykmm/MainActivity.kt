@@ -1,4 +1,4 @@
-package com.hien.mykmm.android
+package com.hien.mykmm
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,8 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.hien.mykmm.android.ui.DetailScreen
-import com.hien.mykmm.android.ui.RocketScreen
+import com.hien.mykmm.ui.DetailScreen
+import com.hien.mykmm.ui.RocketScreen
 
 class MainActivity : ComponentActivity() {
 

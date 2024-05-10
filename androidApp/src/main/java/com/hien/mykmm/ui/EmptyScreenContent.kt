@@ -1,4 +1,4 @@
-package com.hien.mykmm.android.ui
+package com.hien.mykmm.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Text

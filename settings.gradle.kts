@@ -1,4 +1,4 @@
-rootProject.name = "MyKMM"
+rootProject.name = "SpaceX-KMP"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

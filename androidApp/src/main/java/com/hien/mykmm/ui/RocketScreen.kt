@@ -1,4 +1,4 @@
-package com.hien.mykmm.android.ui
+package com.hien.mykmm.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hien.mykmm.android.MyApplicationTheme
+import com.hien.mykmm.MyApplicationTheme
 import com.hien.mykmm.data.Links
 import com.hien.mykmm.data.RocketLaunch
 import com.hien.mykmm.viewmodels.RocketViewModel

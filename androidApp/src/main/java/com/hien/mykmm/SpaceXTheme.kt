@@ -1,4 +1,4 @@
-package com.hien.mykmm.android
+package com.hien.mykmm
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
