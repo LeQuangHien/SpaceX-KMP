@@ -1,27 +1,26 @@
 import Foundation
 import SwiftUI
 import Shared
+import KMMViewModelSwiftUI
+import KMPNativeCoroutinesAsync
 
 struct DetailView: View {
-    let viewModel = DetailViewModel(
+    @StateViewModel
+    var viewModel = DetailViewModel(
         spaceXRepository: KoinDependencies().spaceXRepository
     )
 
     let objectId: Int32
 
-    @State
-    var object: RocketLaunch? = nil
 
     var body: some View {
         VStack {
-            if let obj = object {
+            if let obj = viewModel.rocketLaunch {
                 ObjectDetails(obj: obj)
             }
         }
-        .task {
-            for await obj in viewModel.getObject(objectId: objectId) {
-                object = obj!
-            }
+       .onAppear {
+            viewModel.setId(objectId: objectId)
         }
     }
 }
