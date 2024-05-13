@@ -7,25 +7,24 @@
 //
 
 import KMMViewModelSwiftUI
+import KMPNativeCoroutinesAsync
 import Shared
 import SwiftUI
 
 struct RocketScreen: View {
 
-    let viewModel = RocketViewModel(
+    @StateViewModel
+    var viewModel = RocketViewModel(
         spaceXRepository: KoinDependencies().spaceXRepository
     )
 
-    @State
-    var objects: [RocketLaunch] = []
-
     var body: some View {
         ZStack {
-            if !objects.isEmpty {
+            if !viewModel.objects.isEmpty {
                 NavigationStack {
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 20) {
-                            ForEach(objects, id: \.flightNumber) { item in
+                            ForEach(viewModel.objects, id: \.flightNumber) { item in
                                 NavigationLink(destination: DetailView(objectId: item.flightNumber)) {
                                     ObjectFrame(obj: item, onClick: {})
                                 }
@@ -37,11 +36,6 @@ struct RocketScreen: View {
                 }
             } else {
                 Text("No data available")
-            }
-        }
-        .task {
-            for await objs in viewModel.objects {
-                objects = objs
             }
         }
     }

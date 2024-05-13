@@ -1,6 +1,5 @@
 package com.hien.mykmm.di
 
-import co.touchlab.skie.configuration.annotations.DefaultArgumentInterop
 import com.hien.mykmm.data.InMemorySpaceXStorage
 import com.hien.mykmm.data.SpaceXRepository
 import com.hien.mykmm.data.SpaceXStorage
@@ -39,8 +38,8 @@ val dataModule = module {
     }
 }
 
+fun initKoin() = initKoin(emptyList())
 
-@DefaultArgumentInterop.Enabled
 fun initKoin(modules: List<Module> = emptyList()) {
     startKoin {
         modules(
