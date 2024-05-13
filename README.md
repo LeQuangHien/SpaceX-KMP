@@ -5,18 +5,17 @@
 ![GitHub stars](https://img.shields.io/github/stars/LeQuangHien/MyKMM?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/LeQuangHien/MyKMM?style=social)
 
-This Kotlin Multiplatform Mobile (KMM) project enables business logic sharing between Android and iOS platforms while allowing native UI development using Jetpack Compose for Android and SwiftUI for iOS. Each platform also has its own ViewModel for platform-specific logic. Key technologies include Ktor for networking, Kotlin Coroutines for asynchronous programming, Koin for Dependency Injection, MockK for unit testing, and Mockative for iOS mocking.
+This Kotlin Multiplatform Mobile (KMM) project enables business logic sharing between Android and iOS platforms while allowing native UI development using Jetpack Compose for Android and SwiftUI for iOS. Key technologies include KMM-ObservableViewModel for shared ViewModels, KMP-NativeCoroutines for consuming suspending functions and flows from iOS,  Ktor for networking, Kotlin Coroutines for asynchronous programming, Koin for Dependency Injection.
 
 ## Features
 
 - Business logic sharing between Android and iOS
 - Native UI development with Jetpack Compose (Android) and SwiftUI (iOS)
-- Separate ViewModels for Android and iOS platforms
+- Shared ViewModels for Android and iOS platforms with KMM-ObservableViewModel
+- Consumption of suspending functions and flows from iOS with KMP-NativeCoroutines
 - Networking with Ktor
 - Asynchronous programming with Kotlin Coroutines
 - Dependency Injection with Koin
-- Unit testing with MockK
-- iOS mocking with Mockative
 
 ## Installation
 
@@ -28,8 +27,7 @@ This Kotlin Multiplatform Mobile (KMM) project enables business logic sharing be
 
 - Develop and maintain shared business logic in the `shared` module.
 - Implement platform-specific UIs using Jetpack Compose (Android) or SwiftUI (iOS).
-- Utilize platform-specific ViewModels for any platform-specific logic.
-- Test shared and platform-specific code accordingly.
+- Utilize shared ViewModels for common logic.
 
 ## Contributing
 
@@ -46,5 +44,5 @@ This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENS
 - [Ktor](https://ktor.io/)
 - [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
 - [Koin](https://insert-koin.io/)
-- [MockK](https://github.com/mockk/mockk)
-- [Mockative](https://github.com/mockative/mockative)
+- [KMP-ObservableViewModel](https://github.com/rickclephas/KMP-ObservableViewModel)
+- [KMP-NativeCoroutines](https://github.com/rickclephas/KMP-NativeCoroutines)
