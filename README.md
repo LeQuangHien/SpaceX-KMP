@@ -1,4 +1,4 @@
-# Kotlin Multiplatform Mobile (KMM) - Business Logic Sharing
+# Kotlin Multiplatform (KMP) - Business Logic Sharing
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/LeQuangHien/MyKMM)
 ![GitHub contributors](https://img.shields.io/github/contributors/LeQuangHien/MyKMM)
